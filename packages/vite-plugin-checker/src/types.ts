@@ -119,6 +119,12 @@ export interface SharedConfig {
     | boolean
     | {
         /**
+         * TODO: better description
+         * Minimum level to be shown on the panel.
+         * @defaultValue `warning`
+         */
+        panelLevel?: 'warning' | 'error'
+        /**
          * Set this true if you want the overlay to default to being open if
          * errors/warnings are found
          * @defaultValue `true`

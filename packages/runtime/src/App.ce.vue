@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import Badge from './components/Badge.ce.vue'
 import List from './components/List.ce.vue'
+import { DiagnosticLevel } from './types'
 import { useChecker } from './useChecker'
 
 const props = withDefaults(
@@ -17,8 +18,21 @@ const props = withDefaults(
 
 const { checkerResults } = useChecker()
 
+// note: if filtered results exist, Badge will still show unfiltered counts, this is intentional
+// but, if no filtered results, Badge will not render regardless of unfiltered counts
+const filteredResults = computed(() => {
+  const panelLevel = props?.overlayConfig?.panelLevel ?? 'warning'
+  const filterLevel = DiagnosticLevel[panelLevel] ?? DiagnosticLevel.warning
+
+  return checkerResults.value.map((checkerResult) => ({
+    ...checkerResult,
+    // TODO: what if d.level is undefined
+    diagnostics: checkerResult.diagnostics?.filter((d: any) => d.level >= filterLevel),
+  }))
+})
+
 const shouldRender = computed(() => {
-  return checkerResults.value.some((p) => p.diagnostics.length > 0)
+  return filteredResults.value.some((p) => p.diagnostics.length > 0)
 })
 
 const collapsed = ref<boolean>(!(props?.overlayConfig?.initialIsOpen ?? true))
@@ -43,7 +57,7 @@ const toggle = () => {
       :style="overlayConfig?.panelStyle"
     >
       <div class="list-scroll">
-        <List :checkerResults="checkerResults" :base="base" ulStyle="margin-bottom: 36px;" />
+        <List :checkerResults="filteredResults" :base="base" ulStyle="margin-bottom: 36px;" />
       </div>
     </main>
   </template>

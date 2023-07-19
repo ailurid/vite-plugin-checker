@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import { DiagnosticLevel } from '../types'
+
 const props = withDefaults(
   defineProps<{
     checkerResults: any
@@ -15,13 +17,14 @@ const props = withDefaults(
   }
 )
 
+// TODO: how about a message if open and some results are filtered out - next to close button
 const summary = computed(() => {
   let errorCount = 0
   let warningCount = 0
   props.checkerResults.forEach((result: any) => {
     result.diagnostics.forEach((d: any) => {
-      if (d.level === 1) errorCount++
-      if (d.level === 0) warningCount++
+      if (d.level === DiagnosticLevel.error) errorCount++
+      if (d.level === DiagnosticLevel.warning) warningCount++
     })
   })
   return { errorCount, warningCount }
