@@ -18,6 +18,8 @@ const props = withDefaults(
 
 const { checkerResults } = useChecker()
 
+// TODO: maybe show a message if open and some results are filtered out?
+
 // note: if filtered results exist, Badge will still show unfiltered counts, this is intentional
 // but, if no filtered results, Badge will not render regardless of unfiltered counts
 const filteredResults = computed(() => {

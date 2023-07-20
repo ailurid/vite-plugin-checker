@@ -17,7 +17,6 @@ const props = withDefaults(
   }
 )
 
-// TODO: how about a message if open and some results are filtered out - next to close button
 const summary = computed(() => {
   let errorCount = 0
   let warningCount = 0
